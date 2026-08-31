@@ -1,98 +1,147 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Tico Autos Backend API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Backend application for Tico Autos built with [NestJS](https://nestjs.com/) and [GraphQL](https://graphql.org/). It provides a robust, scalable API for managing vehicles, implementing JWT-based authentication and MongoDB for data storage.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Current Project Status
+Active Development
 
-## Description
+## Problem it solves
+This project serves as the backend infrastructure for a vehicle management platform (Tico Autos), providing secure and efficient data querying and manipulation through a GraphQL API, instead of traditional REST endpoints, minimizing over-fetching of data.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Key Features
+- **GraphQL API**: Powered by Apollo Server, providing a single and flexible data endpoint.
+- **Authentication**: Secure JWT-based authentication using Passport.js.
+- **Modular Architecture**: Built with NestJS, dividing the logic into isolated feature modules (`Auth`, `Vehicles`).
+- **Database Integration**: MongoDB connection via Mongoose for flexible document storage.
+- **Interactive Playground**: GraphQL Playground enabled for easy testing and exploration of the schema.
 
-## Project setup
+## Technologies Used
+- **Node.js**
+- **NestJS** (`^11.0.1`)
+- **GraphQL** (`^16.13.2`)
+- **Apollo Server** (`^5.5.0`)
+- **MongoDB & Mongoose** (`^9.6.1`)
+- **TypeScript** (`^5.7.3`)
+- **Jest** (for Testing)
 
-```bash
-$ npm install
+## General Architecture
+
+```mermaid
+graph TD
+    Client[Client App] -->|GraphQL Queries/Mutations| API[NestJS GraphQL API]
+    API --> Auth[Auth Module - JWT]
+    API --> Vehicles[Vehicles Module]
+    Vehicles --> DB[(MongoDB)]
+    Auth --> DB
 ```
 
-## Compile and run the project
+The system follows a modular architecture based on NestJS. Requests are received via the `/graphql` endpoint, where Apollo Server processes them. The `AppModule` coordinates the database connection (`DatabaseModule`) and feature modules like `VehiclesModule` and `AuthModule`.
 
-```bash
-# development
-$ npm run start
+## Main Repository Structure
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+```text
+backend-graphql-tico-autosii/
+├── src/
+│   ├── modules/
+│   │   ├── auth/          # Authentication logic and JWT strategies
+│   │   ├── graphql/       # Global GraphQL configurations
+│   │   └── vehicles/      # Vehicle management resolvers and services
+│   ├── database/          # MongoDB connection setup
+│   ├── app.module.ts      # Main application module
+│   ├── main.ts            # Application entry point
+│   └── schema.gql         # Auto-generated GraphQL schema
+├── test/                  # E2E tests and Jest configuration
+├── .env                   # Environment variables (not tracked by git)
+└── package.json           # Project dependencies and scripts
 ```
 
-## Run tests
+## Prerequisites
+Before you begin, ensure you have met the following requirements:
+- **Node.js** (v20+ recommended)
+- **npm** (v10+ recommended)
+- A running **MongoDB** instance (local or Atlas)
+
+## Step-by-Step Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone <repository-url>
+   cd backend-graphql-tico-autosii
+   ```
+
+2. **Install the dependencies:**
+   ```bash
+   npm install
+   ```
+
+## Environment Configuration
+
+Create a `.env` file in the root of the project. You can use the following table to configure your environment variables:
+
+| Name | Required | Purpose | Example |
+| :--- | :---: | :--- | :--- |
+| `PORT` | Optional | Port on which the server will run (defaults to 3002). | `3002` |
+| `DATABASE_URL` | Yes | MongoDB connection string. | `mongodb+srv://user:password@cluster.mongodb.net/dbname?retryWrites=true&w=majority` |
+| `JWT_SECRET` | Yes | Secret key used to sign JSON Web Tokens. | `my_super_secret_jwt_key_123!` |
+
+> **⚠️ Warning**: Never commit your actual `.env` file or hardcode credentials into the repository.
+
+## How to Run the Project in Development
+
+Execute the following command from the root directory to start the server in watch mode:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run start:dev
 ```
+The server will start at `http://localhost:3002` by default. 
+You can access the **GraphQL Playground** at `http://localhost:3002/graphql`.
 
-## Deployment
+## How to Generate the Production Build
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+1. **Compile the application:**
+   ```bash
+   npm run build
+   ```
+   This will output the compiled files into the `dist/` directory.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+2. **Run the production build:**
+   ```bash
+   npm run start:prod
+   ```
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+## API and Endpoints
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Because this is a GraphQL application, there is only one main endpoint:
+- **`POST /graphql`**: Main endpoint for all queries and mutations.
+- **`GET /graphql`**: Interactive GraphQL Playground (enabled in development).
 
-## Resources
+The full API schema is automatically generated and can be found in `src/schema.gql`.
 
-Check out a few resources that may come in handy when working with NestJS:
+## Tests and Quality Control
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+The project uses Jest as its testing framework. You can run the following commands from the root directory to execute tests:
 
-## Support
+- **Run unit tests:**
+  ```bash
+  npm run test
+  ```
+- **Run tests in watch mode:**
+  ```bash
+  npm run test:watch
+  ```
+- **Run test coverage:**
+  ```bash
+  npm run test:cov
+  ```
+- **Run end-to-end (e2e) tests:**
+  ```bash
+  npm run test:e2e
+  ```
+- **Run linter:**
+  ```bash
+  npm run lint
+  ```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## Pending Confirmation / Missing Data
+- **Deployment setup**: Explicit deployment pipelines (e.g., Dockerfile, CI/CD scripts) were not found in the root directory.
+- **License & Maintainers**: No specific `LICENSE` file or identified maintainer information exists in the repository.
